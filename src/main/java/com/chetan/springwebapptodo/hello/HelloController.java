@@ -13,4 +13,17 @@ public class HelloController {
     public String sayHello() {
         return "Hello";
     }
+
+    @RequestMapping("/hello-html")
+    @ResponseBody // This annotation is required to return a String as a response
+    //else it will look for a view with name "hello" and return that
+    public String sayHelloHtml() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<html>");
+        sb.append("<body>");
+        sb.append("<h1>Hello HTML</h1>");
+        sb.append("</body>");
+        sb.append("</html>");
+        return sb.toString();
+    }
 }
