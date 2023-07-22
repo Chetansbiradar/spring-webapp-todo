@@ -26,4 +26,11 @@ public class HelloController {
         sb.append("</html>");
         return sb.toString();
     }
+
+    @RequestMapping("/hello-html-jsp")
+    public String sayHelloHtmlJSP() {
+        return "sayHelloHtmlJSP";
+    }
+    //All JSP must be placed in src\main\resources\templates
+
 }
