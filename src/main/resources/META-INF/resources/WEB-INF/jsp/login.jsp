@@ -4,7 +4,7 @@
         <title>Login</title>
     </head>
     <body>
-        <h1>Login</h1>
+        <h1>Login ${name}</h1>
         <form action="login" method="post">
             <label for="username">Username</label>
             <input type="text" name="username" id="username" required>
