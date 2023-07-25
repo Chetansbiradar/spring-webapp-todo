@@ -2,9 +2,11 @@ package com.chetan.springwebapptodo.login;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
@@ -12,13 +14,29 @@ import java.util.Optional;
 @Controller
 public class LoginController {
 
+    private AuthService authService;
+
+    public LoginController(AuthService authService) {
+        this.authService = authService;
+    }
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    @RequestMapping("/login")
-    public String showLoginPage(@RequestParam Optional<String> name, ModelMap model) {
-        //model gives the data to the view, model is provided by spring, and it's a map
-        logger.info("Request param: name is {}", name.orElse("Guest"));
-        model.put("name", name.orElse("Guest"));
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String showLoginPage() {
         return "login";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String showWelcome(@RequestParam String name, @RequestParam String password, ModelMap model) {
+        if(!authService.validateUser(name, password)) {
+            model.put("errorMessage", "Invalid Credentials");
+            return "login";
+        }
+
+        model.put("name", name);
+        model.put("password", password);
+
+        return "welcome";
     }
 }
  
