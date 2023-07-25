@@ -14,6 +14,7 @@
                 <form:input type="hidden" path="id" />
                 <form:input type="hidden" path="done"  />
                 <input type="submit" value="Add" class="btn btn-success" />
+                <form:errors path="description" cssClass="error" />
             </form:form>
         </div>
         <script src="webjars/bootstrap/5.3.0/js/bootstrap.js" type="text/javascript"></script>
