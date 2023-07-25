@@ -1,5 +1,6 @@
 package com.chetan.springwebapptodo.todo;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,5 +36,18 @@ public class TodoService {
     public void deleteTodoById(int id){
         Predicate<? super Todo> todoPredicate = todo -> todo.getId() == id;
         todos.removeIf(todoPredicate);
+    }
+
+    public Todo findTodoById(int id) {
+        Predicate<? super Todo> todoPredicate = todo -> todo.getId() == id;
+        return todos.stream().filter(todoPredicate).findFirst().orElse(null);
+    }
+
+    public void updateTodoById(@Valid Todo todo) {
+        todos.stream().filter(todo1 -> todo1.getId() == todo.getId()).forEach(todo1 -> {
+            todo1.setDescription(todo.getDescription());
+            todo1.setTargetDate(todo.getTargetDate());
+            todo1.setDone(todo.isDone());
+        });
     }
 }

@@ -49,14 +49,31 @@ public class TodoController {
             return "add-todo";
         }
         String username = (String) map.get("name");
-        String description = todo.getDescription();
-        todoService.addTodo(username, description, LocalDate.now().plusYears(1), false);
+        todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), false);
         return "redirect:/todos";
     }
 
     @RequestMapping("/delete-todo")
     public String deleteTodoById(@RequestParam int id) {
         todoService.deleteTodoById(id);
+        return "redirect:/todos";
+    }
+
+    @RequestMapping(value = "/update-todo", method = RequestMethod.GET)
+    public String updateTodoById(@RequestParam int id, ModelMap map) {
+        Todo todo = todoService.findTodoById(id);
+        map.put("todo", todo);
+        return "add-todo";
+    }
+
+    @RequestMapping(value = "/update-todo", method = RequestMethod.POST)
+    public String updateTodoById(@Valid Todo todo, BindingResult bindingResult, ModelMap map) {
+        if(bindingResult.hasErrors()) {
+            return "add-todo";
+        }
+        String username = (String) map.get("name");
+        todo.setUsername(username);
+        todoService.updateTodoById(todo);
         return "redirect:/todos";
     }
 }
