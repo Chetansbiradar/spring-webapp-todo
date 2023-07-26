@@ -20,7 +20,8 @@ public class TodoService {
     }
 
     public List<Todo> findByUsername(String user) {
-        return todos;
+        Predicate<? super Todo> todoPredicate = todo -> todo.getUsername().equals(user);
+        return todos.stream().filter(todoPredicate).toList();
     }
 
     public void addTodo(String username, String description, LocalDate targetDate, boolean isDone) {

@@ -1,6 +1,9 @@
 package com.chetan.springwebapptodo.todo;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -24,14 +27,15 @@ public class TodoController {
 
     @RequestMapping(value = "/todos")
     public String showTodos(ModelMap map) {
-        List<Todo> todos = todoService.findByUsername("Chetan");
+        String username = getLoggedInUserName();
+        List<Todo> todos = todoService.findByUsername(username);
         map.put("todos", todos);
         return "listTodos";
     }
 
     @RequestMapping(value = "/add-todo", method = RequestMethod.GET)
     public String showAddTodo(ModelMap map) {
-        String username = (String) map.get("name");
+        String username = getLoggedInUserName();
         Todo todo = new Todo(
                 0,
                 username,
@@ -48,7 +52,7 @@ public class TodoController {
         if(bindingResult.hasErrors()) {
             return "add-todo";
         }
-        String username = (String) map.get("name");
+        String username = getLoggedInUserName();
         todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), false);
         return "redirect:/todos";
     }
@@ -71,9 +75,14 @@ public class TodoController {
         if(bindingResult.hasErrors()) {
             return "add-todo";
         }
-        String username = (String) map.get("name");
+        String username = getLoggedInUserName();
         todo.setUsername(username);
         todoService.updateTodoById(todo);
         return "redirect:/todos";
+    }
+
+    private static String getLoggedInUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }
